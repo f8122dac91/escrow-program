@@ -82,8 +82,8 @@ impl EscrowState {
 pub struct Offer {
     pub id: u64,
     pub maker: Pubkey,
-    pub token_mint_a: Pubkey,
-    pub token_mint_b: Pubkey,
+    pub token_a_mint: Pubkey,
+    pub token_b_mint: Pubkey,
     pub token_b_wanted_amount: u64,
     pub bump: u8,
 }
@@ -104,8 +104,8 @@ impl Offer {
             Self {
                 id: offer_id,
                 maker: maker_pubkey,
-                token_mint_a: token_a_mint_pubkey,
-                token_mint_b: token_b_mint_pubkey,
+                token_a_mint: token_a_mint_pubkey,
+                token_b_mint: token_b_mint_pubkey,
                 token_b_wanted_amount,
                 bump,
             },

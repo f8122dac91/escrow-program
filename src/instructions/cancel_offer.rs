@@ -44,7 +44,7 @@ pub fn process(program_id: &Pubkey, accounts: &[AccountInfo]) -> ProgramResult {
 
     // Validate the offer
     assert_eq!(&offer.maker, maker.key);
-    assert_eq!(&offer.token_mint_a, token_a_mint.key);
+    assert_eq!(&offer.token_a_mint, token_a_mint.key);
 
     // Create program address of the offer
     let offer_address = Offer::create_program_address(program_id, maker.key, offer.id, offer.bump)?;

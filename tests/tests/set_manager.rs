@@ -11,10 +11,9 @@ async fn it_sets_manager() {
 
     // Initialize the escrow state account
     let manager_keypair = Keypair::new();
-    add_escrow_state_account(
-        &mut program_test,
-        EscrowState::new(&escrow_program::ID, manager_keypair.pubkey(), 0, 0).0,
-    );
+    let (escrow_state, escrow_state_address) =
+        EscrowState::new(&escrow_program::ID, manager_keypair.pubkey(), 0, 0);
+    add_escrow_state_account(&mut program_test, escrow_state);
 
     // Create new manager pubkey
     let new_manager_pubkey = Pubkey::new_unique();
@@ -33,4 +32,12 @@ async fn it_sets_manager() {
         ))
         .await
         .unwrap();
+
+    // Check the result
+    let escrow_state_after_set = banks_client
+        .get_account_data_with_borsh::<EscrowState>(escrow_state_address)
+        .await
+        .unwrap();
+
+    assert_eq!(escrow_state_after_set.manager, new_manager_pubkey,);
 }

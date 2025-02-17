@@ -76,8 +76,8 @@ pub fn process(program_id: &Pubkey, accounts: &[AccountInfo]) -> ProgramResult {
 
     // Validate the offer
     assert_eq!(&offer.maker, maker.key);
-    assert_eq!(&offer.token_mint_a, token_a_mint.key);
-    assert_eq!(&offer.token_mint_b, token_b_mint.key);
+    assert_eq!(&offer.token_a_mint, token_a_mint.key);
+    assert_eq!(&offer.token_b_mint, token_b_mint.key);
 
     let offer_address = Offer::create_program_address(program_id, maker.key, offer.id, offer.bump)?;
 
@@ -151,22 +151,8 @@ pub fn process(program_id: &Pubkey, accounts: &[AccountInfo]) -> ProgramResult {
 
     // Read token amount in the offer's vault account
     let vault_amount_a = TokenAccount::unpack(&vault.data.borrow())?.amount;
-    let taker_amount_a_before_transfer =
-        TokenAccount::unpack(&taker_token_a_account.data.borrow())?.amount;
-
-    // let maker_amount_b_before_transfer =
-    //     TokenAccount::unpack(&maker_token_b_account.data.borrow())?.amount;
-    // let taker_amount_b = TokenAccount::unpack(&taker_token_b_account.data.borrow())?.amount;
-    // solana_program::msg!("Vault A Balance Before Transfer: {}", vault_amount_a);
-    // solana_program::msg!(
-    //     "Taker A Balance Before Transfer: {}",
-    //     taker_amount_a_before_transfer
-    // );
-    // solana_program::msg!(
-    //     "Maker B Balance Before Transfer: {}",
-    //     maker_amount_b_before_transfer
-    // );
-    // solana_program::msg!("Taker B Balance Before Transfer: {}", taker_amount_b);
+    // let taker_amount_a_before_transfer =
+    //     TokenAccount::unpack(&taker_token_a_account.data.borrow())?.amount;
 
     // Calculate token B fee amount
     let token_b_fee_amount = escrow_state.get_token_b_fee(offer.token_b_wanted_amount)?;
@@ -317,35 +303,20 @@ pub fn process(program_id: &Pubkey, accounts: &[AccountInfo]) -> ProgramResult {
         &[offer_signer_seed],
     )?;
 
-    let taker_amount_a = TokenAccount::unpack(&taker_token_a_account.data.borrow())?.amount;
-    let maker_amount_b = TokenAccount::unpack(&maker_token_b_account.data.borrow())?.amount;
-    let escrow_fee_amount_a =
-        TokenAccount::unpack(&escrow_fee_token_a_account.data.borrow())?.amount;
-    let escrow_fee_amount_b =
-        TokenAccount::unpack(&escrow_fee_token_b_account.data.borrow())?.amount;
+    // let taker_amount_a = TokenAccount::unpack(&taker_token_a_account.data.borrow())?.amount;
+    // let maker_amount_b = TokenAccount::unpack(&maker_token_b_account.data.borrow())?.amount;
+    // let escrow_fee_amount_a =
+    //     TokenAccount::unpack(&escrow_fee_token_a_account.data.borrow())?.amount;
+    // let escrow_fee_amount_b =
+    //     TokenAccount::unpack(&escrow_fee_token_b_account.data.borrow())?.amount;
 
-    assert_eq!(
-        taker_amount_a,
-        taker_amount_a_before_transfer + vault_amount_a - escrow_fee_amount_a
-    );
-    assert_eq!(
-        maker_amount_b,
-        taker_amount_a_before_transfer + offer.token_b_wanted_amount - escrow_fee_amount_b
-    );
-
-    // let taker_amount_b = TokenAccount::unpack(&taker_token_b_account.data.borrow())?.amount;
-    // let vault_amount_a = TokenAccount::unpack(&vault.data.borrow())?.amount;
-    // solana_program::msg!("Vault A Balance After Transfer: {}", vault_amount_a);
-    // solana_program::msg!("Taker A Balance After Transfer: {}", taker_amount_a);
-    // solana_program::msg!("Maker B Balance After Transfer: {}", maker_amount_b);
-    // solana_program::msg!("Taker B Balance After Transfer: {}", taker_amount_b);
-    // solana_program::msg!(
-    //     "Escrow Fee A balance after transfer: {}",
-    //     escrow_fee_amount_a
+    // assert_eq!(
+    //     taker_amount_a,
+    //     taker_amount_a_before_transfer + vault_amount_a - escrow_fee_amount_a
     // );
-    // solana_program::msg!(
-    //     "Escrow Fee B balance after transfer: {}",
-    //     escrow_fee_amount_b
+    // assert_eq!(
+    //     maker_amount_b,
+    //     taker_amount_a_before_transfer + offer.token_b_wanted_amount - escrow_fee_amount_b
     // );
 
     // Close the vault account

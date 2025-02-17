@@ -1,5 +1,6 @@
 use solana_sdk::{signature::Keypair, signer::Signer, transaction::Transaction};
 use spl_associated_token_account::get_associated_token_address;
+use spl_token::state::Account as TokenAccount;
 
 use escrow_program::{
     instructions::{collect_fee::CollectFeeArgs, collect_fee_ix},
@@ -128,4 +129,16 @@ async fn it_collects_fee_and_closes_fee_account() {
         ))
         .await
         .unwrap();
+
+    // Check the result
+    let destination_token_account_balance_after_collect = banks_client
+        .get_packed_account_data::<TokenAccount>(destination_token_account_address)
+        .await
+        .unwrap()
+        .amount;
+
+    assert_eq!(
+        destination_token_account_balance_after_collect,
+        ESCROW_FEE_BALANCE,
+    );
 }

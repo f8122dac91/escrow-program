@@ -1,5 +1,6 @@
 use solana_sdk::{pubkey::Pubkey, signature::Keypair, signer::Signer, transaction::Transaction};
 use spl_associated_token_account::get_associated_token_address;
+use spl_token::state::Account as TokenAccount;
 
 use escrow_program::{
     instructions::cancel_offer_ix,
@@ -71,4 +72,16 @@ async fn it_cancels_offer() {
         ))
         .await
         .unwrap();
+
+    // Check the result
+    let maker_token_a_account_pubkey =
+        get_associated_token_address(&maker_keypair.pubkey(), &token_a_mint_address);
+
+    let maker_token_a_account_balance_after_cancel = banks_client
+        .get_packed_account_data::<TokenAccount>(maker_token_a_account_pubkey)
+        .await
+        .unwrap()
+        .amount;
+
+    assert_eq!(maker_token_a_account_balance_after_cancel, TOKEN_A_OFFERED);
 }

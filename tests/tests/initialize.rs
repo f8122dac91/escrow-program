@@ -3,6 +3,7 @@ use solana_sdk::{signature::Keypair, signer::Signer, transaction::Transaction};
 use escrow_program::{
     consts::INITIAL_MANAGER_KEYPAIR,
     instructions::{initialize::InitializeArgs, initialize_ix},
+    state::EscrowState,
 };
 
 use crate::utils::prepare_program_test;
@@ -36,4 +37,17 @@ async fn it_initializes() {
         ))
         .await
         .unwrap();
+
+    // Check the result
+    let (escrow_state_address, _bump) = EscrowState::find_program_address(&escrow_program::ID);
+
+    let escrow_state_after_init = banks_client
+        .get_account_data_with_borsh::<EscrowState>(escrow_state_address)
+        .await
+        .unwrap();
+
+    assert_eq!(
+        escrow_state_after_init.manager,
+        initial_manager_keypair.pubkey()
+    );
 }
