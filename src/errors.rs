@@ -1,3 +1,4 @@
+//! Defines custom errors that the program returns as ProgramError::Custom(u32)
 use solana_program::program_error::ProgramError;
 use thiserror::Error;
 

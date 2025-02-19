@@ -24,6 +24,10 @@ pub mod set_fees;
 pub mod set_manager;
 pub mod take_offer;
 
+/// Declares all available instructions of the escrow program.
+///
+/// Comments defines the expected accounts for each instruction type.
+/// The expected type of argument are declared for instructions that requires argument.
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
 pub enum EscrowInstruction {
     // Manager-facing instructions

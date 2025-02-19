@@ -5,6 +5,7 @@ use {
 
 use crate::instructions::*;
 
+/// Entrypoint function that processes instructions
 pub fn process_instruction(
     program_id: &Pubkey,
     accounts: &[AccountInfo],
